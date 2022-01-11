@@ -325,9 +325,9 @@ static BOOL configured = FALSE;
 
 -(BOOL) isOtherAudioPlaying {
     UInt32 isPlaying = 0;
-//    UInt32 varSize = sizeof(isPlaying);
-//    AudioSessionGetProperty (kAudioSessionProperty_OtherAudioIsPlaying, &varSize, &isPlaying);
-    isPlaying = [[AVAudioSession sharedInstance] isOtherAudioPlaying];
+    //UInt32 varSize = sizeof(isPlaying);
+    //AudioSessionGetProperty (kAudioSessionProperty_OtherAudioIsPlaying, &varSize, &isPlaying);
+    isPlaying = [[AVAudioSession sharedInstance] isOtherAudioPlaying]; 
     return (isPlaying != 0);
 }
 
@@ -475,15 +475,15 @@ static BOOL configured = FALSE;
 //however, on a 3gs running 3.1.2 no route change is generated when the user switches the 
 //ringer mute switch to off (i.e. enables sound) therefore polling is the only reliable way to
 //determine ringer switch state
--(BOOL) isDeviceMuted {
+ -(BOOL) isDeviceMuted {
 
-   #if TARGET_IPHONE_SIMULATOR
-       //Calling audio route stuff on the simulator causes problems
-       return NO;
-   #else
-       return NO;
-   #endif
-   }
+#if TARGET_IPHONE_SIMULATOR
+    //Calling audio route stuff on the simulator causes problems
+    return NO;
+#else
+    return NO;
+#endif
+}    
 
 #pragma mark Audio Interrupt Protocol
 
