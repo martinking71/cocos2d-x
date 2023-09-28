@@ -26,7 +26,12 @@
 
 #include "2d/CCFontAtlas.h"
 #if CC_TARGET_PLATFORM != CC_PLATFORM_WIN32 && CC_TARGET_PLATFORM != CC_PLATFORM_ANDROID
-#include <iconv.h>
+// Fixed compile error after xCode15 update / m1 mac compile issues
+// Lust for converting utf32 to gb2312 so not used so conditionally compile out
+#define ICONV_SUPPORT 0     
+#if ICONV_SUPPORT
+    #include <iconv.h>
+#endif
 #elif CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
 #include "platform/android/jni/Java_org_cocos2dx_lib_Cocos2dxHelper.h"
 #endif
@@ -127,11 +132,13 @@ FontAtlas::~FontAtlas()
     delete []_currentPageData;
 
 #if CC_TARGET_PLATFORM != CC_PLATFORM_WIN32 && CC_TARGET_PLATFORM != CC_PLATFORM_ANDROID
+    #if ICONV_SUPPORT
     if (_iconv)
     {
         iconv_close(_iconv);
         _iconv = nullptr;
     }
+    #endif
 #endif
 }
 
@@ -230,6 +237,7 @@ bool FontAtlas::getLetterDefinitionForChar(char32_t utf32Char, FontLetterDefinit
 
 void FontAtlas::conversionU32TOGB2312(const std::u32string& u32Text, std::unordered_map<unsigned int, unsigned int>& charCodeMap)
 {
+#if ICONV_SUPPORT
     size_t strLen = u32Text.length();
     auto gb2312StrSize = strLen * 2;
     auto gb2312Text = new (std::nothrow) char[gb2312StrSize];
@@ -294,6 +302,7 @@ void FontAtlas::conversionU32TOGB2312(const std::u32string& u32Text, std::unorde
     }
 
     delete[] gb2312Text;
+#endif
 }
 
 void FontAtlas::findNewCharacters(const std::u32string& u32Text, std::unordered_map<unsigned int, unsigned int>& charCodeMap)
@@ -345,11 +354,13 @@ void FontAtlas::findNewCharacters(const std::u32string& u32Text, std::unordered_
             }
             break;
         }
+#if ICONV_SUPPORT
         case FT_ENCODING_GB2312:
         {
             conversionU32TOGB2312(newChars, charCodeMap);
             break;
         }
+#endif
         default:
             CCLOG("FontAtlas::findNewCharacters: Unsupported encoding:%d", charEncoding);
             break;
