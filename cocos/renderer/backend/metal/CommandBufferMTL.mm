@@ -365,7 +365,13 @@ void CommandBufferMTL::endFrame()
     [_mtlCommandBuffer addCompletedHandler:^(id<MTLCommandBuffer> commandBuffer) {
         // GPU work is complete
         // Signal the semaphore to start the CPU work
-        dispatch_semaphore_signal(_frameBoundarySemaphore);
+        if (_frameBoundarySemaphore) {
+            // Hack to check that we haven't cleaned up so no need to signal with the semaphore
+            // Should be catchable in the destructor with
+            // dispatch_semaphore_wait(_frameBoundarySemaphore, DISPATCH_TIME_FOREVER);
+            // but didn't seem to work. Not the best but fixes the problem
+            dispatch_semaphore_signal(_frameBoundarySemaphore);
+        }
     }];
 
     [_mtlCommandBuffer commit];
