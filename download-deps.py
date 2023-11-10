@@ -49,7 +49,15 @@ from optparse import OptionParser
 from time import time
 from time import sleep
 from sys import stdout
-from distutils.dir_util import copy_tree, remove_tree
+
+copy_tree_removed = sys.version_info[0] >= 3 and sys.version_info[1] > 11
+if not copy_tree_removed:
+    import distutils.dir_util
+    copy_tree = distutils.dir_util.copy_tree
+    remove_tree = distutils.dir_util.remove_tree
+else:
+    copy_tree = shutil.copytree
+    remove_tree = shutil.rmtree
 
 
 def delete_folder_except(folder_path, excepts):
