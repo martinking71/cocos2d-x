@@ -136,12 +136,11 @@ class CocosZipInstaller(object):
         print("==> Ready to download '%s' from '%s'" %
               (self._filename, self._url))
         if(python_2):
-            import urllib2 as urllib
-            u = urllib.urlopen(self._url).read()
+            from urllib2 import urlopen as urllib_open
         else:
-            from urllib import urlopen
-            u = urlopen(self._url).read()
+            from urllib import urlopen as urllib_open
         try:
+            u = urllib_open(self._url).read()
         except Exception as e:
             if e.code == 404:
                 print("==> Error: Could not find the file from url: '%s'" %
