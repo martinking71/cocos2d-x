@@ -59,7 +59,17 @@ else:
     copy_tree = shutil.copytree
     remove_tree = shutil.rmtree
 
+import ssl
 
+try:
+    _create_unverified_https_context = ssl._create_unverified_context
+except AttributeError:
+    # Legacy Python that doesn't verify HTTPS certificates by default
+    pass
+else:
+    # Handle target environment that doesn't support HTTPS verification
+    ssl._create_default_https_context = _create_unverified_https_context
+    
 def delete_folder_except(folder_path, excepts):
     """
     Delete a folder excepts some files/subfolders, `excepts` doesn't recursively which means it can not include
