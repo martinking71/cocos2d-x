@@ -136,9 +136,9 @@ class CocosZipInstaller(object):
         print("==> Ready to download '%s' from '%s'" %
               (self._filename, self._url))
         if(python_2):
-            from urllib2 import urlopen as urllib_open
-        else:
             from urllib import urlopen as urllib_open
+        else:
+            from urllib.request import urlopen as urllib_open
         try:
             u = urllib_open(self._url).read()
         except Exception as e:
