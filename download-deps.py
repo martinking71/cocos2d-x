@@ -140,7 +140,7 @@ class CocosZipInstaller(object):
         else:
             import urllib.request as urllib
         try:
-            u = urllib.urlopen(self._url)
+            u = urllib.urlopen(self._url).read()
         except Exception as e:
             if e.code == 404:
                 print("==> Error: Could not find the file from url: '%s'" %
