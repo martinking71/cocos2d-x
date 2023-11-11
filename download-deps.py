@@ -138,7 +138,7 @@ class CocosZipInstaller(object):
         if(python_2):
             import urllib2 as urllib
         else:
-            import urllib.request as urllib
+            import urllib.urlopen as urllib
         try:
             u = urllib.urlopen(self._url).read()
         except Exception as e:
