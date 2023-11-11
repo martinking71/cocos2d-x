@@ -137,6 +137,7 @@ class CocosZipInstaller(object):
               (self._filename, self._url))
         if(python_2):
             from urllib import urlopen as urllib_open
+            self._url += '?'
         else:
             from urllib.request import urlopen as urllib_open
         try:
