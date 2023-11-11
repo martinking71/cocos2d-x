@@ -146,7 +146,7 @@ class CocosZipInstaller(object):
         print("==> Ready to download '%s' from '%s'" %
               (self._filename, self._url))
         if(python_2):
-            from urllib import urlopen as urllib_open
+            from urllib2 import urlopen as urllib_open
             #bash command to install certs: /Applications/Python\ 2.7/Install\ Certificates.command
             # os.system("bash /Applications/Python*/Install\ Certificates.command")
             # os.environ['PYTHONHTTPSVERIFY'] = '0'
