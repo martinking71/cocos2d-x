@@ -139,6 +139,7 @@ class CocosZipInstaller(object):
             from urllib import urlopen as urllib_open
             #bash command to install certs: /Applications/Python\ 2.7/Install\ Certificates.command
             os.command("bash /Applications/Python*/Install\ Certificates.command")
+            os.environ['PYTHONHTTPSVERIFY'] = '0'
         else:
             from urllib.request import urlopen as urllib_open
         try:
