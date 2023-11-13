@@ -49,27 +49,9 @@ from optparse import OptionParser
 from time import time
 from time import sleep
 from sys import stdout
+from distutils.dir_util import copy_tree, remove_tree
 
-copy_tree_removed = sys.version_info[0] >= 3 and sys.version_info[1] > 11
-if not copy_tree_removed:
-    import distutils.dir_util
-    copy_tree = distutils.dir_util.copy_tree
-    remove_tree = distutils.dir_util.remove_tree
-else:
-    copy_tree = shutil.copytree
-    remove_tree = shutil.rmtree
 
-import ssl
-
-try:
-    _create_unverified_https_context = ssl._create_unverified_context
-except AttributeError:
-    # Legacy Python that doesn't verify HTTPS certificates by default
-    pass
-else:
-    # Handle target environment that doesn't support HTTPS verification
-    ssl._create_default_https_context = _create_unverified_https_context
-    
 def delete_folder_except(folder_path, excepts):
     """
     Delete a folder excepts some files/subfolders, `excepts` doesn't recursively which means it can not include
@@ -146,14 +128,11 @@ class CocosZipInstaller(object):
         print("==> Ready to download '%s' from '%s'" %
               (self._filename, self._url))
         if(python_2):
-            from urllib2 import urlopen as urllib_open
-            #bash command to install certs: /Applications/Python\ 2.7/Install\ Certificates.command
-            # os.system("bash /Applications/Python*/Install\ Certificates.command")
-            # os.environ['PYTHONHTTPSVERIFY'] = '0'
+            import urllib2 as urllib
         else:
-            from urllib.request import urlopen as urllib_open
+            import urllib.request as urllib
         try:
-            u = urllib_open(self._url).read()
+            u = urllib.urlopen(self._url)
         except Exception as e:
             if e.code == 404:
                 print("==> Error: Could not find the file from url: '%s'" %
