@@ -50,7 +50,7 @@ from time import time
 from time import sleep
 from sys import stdout
 from distutils.dir_util import copy_tree, remove_tree
-
+import certifi
 
 def delete_folder_except(folder_path, excepts):
     """
@@ -132,13 +132,13 @@ class CocosZipInstaller(object):
         else:
             import urllib.request as urllib
         try:
-            u = urllib.urlopen(self._url)
+            u = urllib.urlopen(self._url, cafile=certifi.where())
         except Exception as e:
             if e.code == 404:
                 print("==> Error: Could not find the file from url: '%s'" %
                       (self._url))
-            print("==> Http request failed, error code: " +
-                  str(e.code) + ", reason: " + str(e.read()))
+            print("==> Http request failed, error code: SSL certs again? " +
+                  str(e))
             sys.exit(1)
 
         f = open(self._filename, 'wb')
